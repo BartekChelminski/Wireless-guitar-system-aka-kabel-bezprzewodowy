@@ -13,7 +13,7 @@ uint8_t slaveAddress[] = {0xD0, 0xCF, 0x13, 0x26, 0x71, 0x14};
 #define I2S_SD_PIN    32  // Dane z mikrofonu
 
 // Parametry Audio
-#define SAMPLE_RATE 16000     
+#define SAMPLE_RATE 44100     
 #define SAMPLES_PER_PACKET 120 // 120 próbek * 2 bajty = 240 bajtów
 
 // Struktura danych
@@ -25,20 +25,23 @@ struct_message myData;
 esp_now_peer_info_t peerInfo;
 
 // Inicjalizacja I2S w trybie ODBIORU (RX)
-void setupI2S_Microphone() {
+void setupI2S_Common() {
   i2s_config_t i2s_config = {
-    .mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_RX), // RX = Odbiór
-    .sample_rate = SAMPLE_RATE,
-    .bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT, // Czytamy jako 16-bit
-    .channel_format = I2S_CHANNEL_FMT_ONLY_LEFT,  // Większość mikr. mono to kanał lewy
+    // ... tryb RX lub TX zależnie od urządzenia ...
+    .sample_rate = SAMPLE_RATE, // 44100
+    .bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT,
+    .channel_format = I2S_CHANNEL_FMT_ONLY_LEFT, // MONO jest kluczowe! Stereo (2ch) to 2x więcej danych (176 kB/s) - to już nie zadziała.
     .communication_format = I2S_COMM_FORMAT_STAND_I2S,
     .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,
-    .dma_buf_count = 8,
-    .dma_buf_len = 256, // Długość bufora w ramkach
-    .use_apll = false,
-    .tx_desc_auto_clear = false,
-    .fixed_mclk = 0
+    
+    // ZMIANY DLA STABILNOŚCI PRZY 44.1kHz:
+    .dma_buf_count = 16,     // Zwiększamy liczbę buforów (było 8)
+    .dma_buf_len = 256,      // Długość bufora
+    .use_apll = true,        // Włączamy APLL (Analog PLL) - lepszy zegar dla 44.1kHz
+    .tx_desc_auto_clear = true
   };
+  // ... reszta kodu instalacji ...
+}
 
   i2s_pin_config_t pin_config = {
     .bck_io_num = I2S_SCK_PIN,
@@ -95,7 +98,7 @@ void setup() {
   }
 
   // Uruchomienie mikrofonu
-  setupI2S_Microphone();
+  setupI2S_Common();
   Serial.println("Mikrofon I2S uruchomiony. Nadawanie...");
 }
 
