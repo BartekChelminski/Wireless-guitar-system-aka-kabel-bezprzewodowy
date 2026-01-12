@@ -49,14 +49,7 @@ void codec_setup()
   
   codec.setWL(WM8960_WL_16BIT);
   // --- KONFIGURACJA PRZEZ FUNKCJE BIBLIOTEKI ---
-  
-  // Reset układu (dla pewności)
 
-
-  // Konfiguracja Zegara:
-  // Domyślnie po resecie WM8960 oczekuje MCLK i ma wyłączone PLL.
-  // Ponieważ ESP32 poda MCLK na GPIO 0, NIE musimy nic robić z PLL!
-  // Biblioteka domyślnie ustawia SYSCLK = MCLK.
 
   // Włączenie DAC i wyjść
   codec.enableDacRight();
@@ -74,32 +67,38 @@ void codec_setup()
 
   codec.enableHeadphones();
   // Głośność Słuchawek (L i R) - Zakres 0-127
-  codec.setHeadphoneVolumeDB(-10.0);
+  codec.setHeadphoneVolumeDB(-30.0);
   
   // Włączenie wyjścia słuchawkowego (odciszenie)
 
 
-
-  
+  //Konfiguracja zegara - dokumentacja strona 61
+  codec.enablePLL();
+  codec.setPLLPRESCALE(WM8960_PLLPRESCALE_DIV_2);
+  codec.setSYSCLKDIV(WM8960_SYSCLK_DIV_BY_2); 
+  codec.setPLLN(7);
+  codec.setPLLK(134, 194, 38); //0x86C226h
+  codec.setSMD(1);
+  codec.setCLKSEL(WM8960_CLKSEL_PLL);
 
   // Opcjonalnie: Głośniki (Zakres 0-127)
   // codec.setSpeakerVolume(120);
   // codec.enableSpeakers();
 
-  Serial.println("Kodek skonfigurowany przez bibliotekę.");
+  //Serial.println("Kodek skonfigurowany przez bibliotekę.");
 
 }
 
 void setup() {
-  Serial.begin(115200);
-  Serial.println("Start ESP32 + SparkFun Lib + MCLK(GPIO0)");
+  //Serial.begin(115200);
+  //Serial.println("Start ESP32 + SparkFun Lib + MCLK(GPIO0)");
 
   // 1. Inicjalizacja I2C na naszych pinach
   Wire.begin(I2C_SDA, I2C_SCL);
 
 
 if (!codec.begin()) {
-    Serial.println("BŁĄD: Nie wykryto WM8960! Sprawdź I2C.");
+    //Serial.println("BŁĄD: Nie wykryto WM8960! Sprawdź I2C.");
     while (true);
   }
   // 2. Inicjalizacja Kodeka za pomocą biblioteki
@@ -137,7 +136,7 @@ if (!codec.begin()) {
   // PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO0_U, FUNC_GPIO0_CLK_OUT1);
 
   i2s_zero_dma_buffer(I2S_PORT);
-  Serial.println("I2S Start (MCLK Running)");
+  //Serial.println("I2S Start (MCLK Running)");
 }
 
 double phase = 0;
