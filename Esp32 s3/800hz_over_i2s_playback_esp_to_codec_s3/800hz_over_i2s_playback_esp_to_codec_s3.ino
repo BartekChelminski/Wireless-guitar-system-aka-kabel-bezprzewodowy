@@ -67,7 +67,7 @@ void codec_setup()
 
   codec.enableHeadphones();
   // Głośność Słuchawek (L i R) - Zakres 0-127
-  codec.setHeadphoneVolumeDB(-30.0);
+  codec.setHeadphoneVolumeDB(-20.0);
   
   // Włączenie wyjścia słuchawkowego (odciszenie)
 
