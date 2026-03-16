@@ -29,7 +29,7 @@ Wymagana biblioteka SparkFun_WM8960_Arduino_Library
 #define I2C_SCL   D5
 
 // --- PARAMETRY ---
-#define SAMPLE_RATE   44100
+#define SAMPLE_RATE   44100y
 #define WAVE_FREQ_HZ  800
 #define VOLUME_DIGITAL 10000 
 
