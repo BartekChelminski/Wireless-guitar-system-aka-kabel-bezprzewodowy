@@ -1,9 +1,0 @@
-
-
-# Load bootloader symbols
-set confirm off
-    # Bootloader elf was not found
-set confirm on
-
-# Load application symbols
-file D:/Espressif/Projects/Uni_opt_recv/build/bootloader/bootloader.elf
