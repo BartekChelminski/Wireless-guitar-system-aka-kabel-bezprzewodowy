@@ -1,0 +1,9 @@
+
+
+# Load bootloader symbols
+set confirm off
+    add-symbol-file D:/Espressif/Projects/Uni_opt_send/build/bootloader/bootloader.elf
+set confirm on
+
+# Load application symbols
+file D:/Espressif/Projects/Uni_opt_send/build/app-template.elf
