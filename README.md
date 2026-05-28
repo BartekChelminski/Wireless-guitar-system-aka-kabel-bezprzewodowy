@@ -24,7 +24,7 @@ Both units are housed in 3D-printed enclosures:
 | Frame duration | 2.5 ms (120 samples/frame) |
 | Bitrate | 128 kbps |
 | Wireless protocol | ESP-NOW (802.11g, 36 Mbps) |
-| End-to-end latency | ~20 ms |
+| End-to-end latency | ~30 ms |
 | Channel | Mono (right channel from stereo codec) |
 
 ## Project Structure
